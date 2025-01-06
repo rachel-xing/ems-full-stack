@@ -1,2 +1,10 @@
-package net.rachel.service;public interface EmployeeService {
+package net.rachel.service;
+
+import java.util.List;
+import net.rachel.dto.EmployeeDto;
+
+public interface EmployeeService {
+    EmployeeDto createEmployee(EmployeeDto employeeDto);
+    EmployeeDto getEmployeeById(Long employeeId);
+    List<EmployeeDto> getAllEmployees();
 }
