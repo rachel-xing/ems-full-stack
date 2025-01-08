@@ -1,17 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { listEmployees } from "../services/EmployeeService.js";
+import {useNavigate} from "react-router-dom";
 
 const ListEmployeeComponent = () => {
     const [ employees, setEmployees ] = useState([]);
+    const navigator = useNavigate();
+
     useEffect(() => {
         listEmployees().then(response =>
             setEmployees(response.data),
         ).catch(error => console.error(error));
     }, []);
 
+    function createNewEmployee() {
+        navigator("/create-employee")
+    }
+
     return (
         <div className="container">
             <h2 className="text-center">List of Employees</h2>
+            <button className="btn btn-primary mb-2" onClick={createNewEmployee}>Create Employee</button>
             <table className="table table-striped table-bordered">
                 <thead>
                     <tr>
