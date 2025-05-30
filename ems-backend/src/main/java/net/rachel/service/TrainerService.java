@@ -1,13 +1,12 @@
 package net.rachel.service;
 
 import java.util.List;
-import net.rachel.dto.EmployeeDto;
+import net.rachel.dto.TrainerDto;
 
-public interface EmployeeService {
-    EmployeeDto createEmployee(EmployeeDto employeeDto);
-    EmployeeDto getEmployeeById(Long employeeId);
-    List<EmployeeDto> getAllEmployees();
-    EmployeeDto updateEmployeeById(Long employeeId,EmployeeDto updatedEmployeeDto);
-    void deleteEmployeeById(Long employeeId);
-
+public interface TrainerService {
+    TrainerDto createTrainer(TrainerDto trainerDto);
+    TrainerDto getTrainerById(Long trainerId);
+    List<TrainerDto> getAllTrainers();
+    TrainerDto updateTrainerById(Long trainerId,TrainerDto updatedTrainerDto);
+    void deleteTrainerById(Long trainerId);
 }

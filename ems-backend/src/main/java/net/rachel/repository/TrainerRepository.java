@@ -1,7 +1,7 @@
 package net.rachel.repository;
 
-import net.rachel.entity.Employee;
+import net.rachel.entity.Trainer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface EmployeeRepository extends JpaRepository<Employee,Long> {
+public interface TrainerRepository extends JpaRepository<Trainer,Long> {
 }
