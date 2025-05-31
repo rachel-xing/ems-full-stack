@@ -1,6 +1,5 @@
 import axios from 'axios'
 
-// 创建axios实例
 const api = axios.create({
     baseURL: 'http://localhost:8080/api',
     timeout: 10000,
@@ -9,7 +8,6 @@ const api = axios.create({
     },
 })
 
-// 请求拦截器 - 自动添加JWT token
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token')
@@ -40,7 +38,7 @@ api.interceptors.response.use(
             return Promise.reject(new Error('Access Denied'))
         }
 
-        // 其他错误
+
         const message = error.response?.data?.message ||
             error.response?.data ||
             error.message ||
