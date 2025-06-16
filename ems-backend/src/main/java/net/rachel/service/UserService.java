@@ -1,4 +1,4 @@
-package net.rachel.service.imlp;
+package net.rachel.service;
 
 import net.rachel.entity.User;
 import net.rachel.entity.Role;
@@ -20,6 +20,7 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
+
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -31,7 +32,7 @@ public class UserService implements UserDetailsService {
 
         return new org.springframework.security.core.userdetails.User(
             user.getUsername(),
-            user.getPassword(), // 明文密码，不加密
+            user.getPassword(),
             user.isEnabled(),
             true, true, true,
             mapRolesToAuthorities(user.getRoles())
@@ -52,12 +53,4 @@ public class UserService implements UserDetailsService {
         return authorities;
     }
 
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username).orElse(null);
-    }
-
-    public User saveUser(User user) {
-        // 直接保存明文密码，不加密
-        return userRepository.save(user);
-    }
 }

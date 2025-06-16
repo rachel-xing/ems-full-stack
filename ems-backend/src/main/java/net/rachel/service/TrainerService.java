@@ -9,4 +9,7 @@ public interface TrainerService {
     List<TrainerDto> getAllTrainers();
     TrainerDto updateTrainerById(Long trainerId,TrainerDto updatedTrainerDto);
     void deleteTrainerById(Long trainerId);
+
+    List<TrainerDto> searchTrainers(String query);
+
 }

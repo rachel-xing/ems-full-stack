@@ -1,4 +1,4 @@
-package net.rachel.service.imlp;
+package net.rachel.service.impl;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,6 +8,7 @@ import net.rachel.exception.ResourceNotFoundException;
 import net.rachel.mapper.TrainerMapper;
 import net.rachel.repository.TrainerRepository;
 import net.rachel.service.TrainerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,6 +20,7 @@ public class TrainerServiceImpl implements TrainerService {
         this.trainerRepository = trainerRepository;
     }
 
+
     @Override
     public TrainerDto getTrainerById(Long trainerId) {
         Trainer trainer = trainerRepository.findById(trainerId)
@@ -29,7 +31,7 @@ public class TrainerServiceImpl implements TrainerService {
     @Override
     public List<TrainerDto> getAllTrainers() {
         List<Trainer> trainers = trainerRepository.findAll();
-        return trainers.stream().map( trainer -> TrainerMapper.mapToTrainerDto(trainer))
+        return trainers.stream().map(TrainerMapper::mapToTrainerDto)
             .collect(Collectors.toList());
     }
 
@@ -52,6 +54,7 @@ public class TrainerServiceImpl implements TrainerService {
         existingTrainer.setRegion(updatedTrainerDto.getRegion());
 
         Trainer updatedTrainer =  trainerRepository.save(existingTrainer);
+
         return TrainerMapper.mapToTrainerDto(updatedTrainer);
     }
 
@@ -61,4 +64,21 @@ public class TrainerServiceImpl implements TrainerService {
             .orElseThrow(() -> new ResourceNotFoundException("Trainer does not exist with given ID: " + trainerId));
         trainerRepository.deleteById(trainerId);
     }
+
+    @Override
+    public List<TrainerDto> searchTrainers(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return getAllTrainers();
+        }
+
+        List<Trainer> trainers = trainerRepository.searchByAllFields(query.trim());
+
+        return trainers.stream()
+            .map(TrainerMapper::mapToTrainerDto)
+            .collect(Collectors.toList());
+    }
+
+
+
+
 }

@@ -11,9 +11,6 @@ import java.util.List;
 @Entity
 @Table(name = "roles")
 @Data
-
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Role {

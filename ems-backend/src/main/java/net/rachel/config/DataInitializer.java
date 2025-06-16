@@ -1,4 +1,4 @@
-package net.rachel.service;
+package net.rachel.config;
 
 import net.rachel.entity.Role;
 import net.rachel.entity.User;
@@ -33,7 +33,7 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // 创建权限
+        // create permission
         if (permissionRepository.count() == 0) {
             Permission readPermission = new Permission();
             readPermission.setName("READ_TRAINER");
@@ -49,7 +49,7 @@ public class DataInitializer implements CommandLineRunner {
 
         }
 
-        // 创建角色
+        // create role
         if (roleRepository.count() == 0) {
             Permission readPerm = permissionRepository.findByName("READ_TRAINER").orElse(null);
             Permission writePerm = permissionRepository.findByName("WRITE_TRAINER").orElse(null);
@@ -66,13 +66,13 @@ public class DataInitializer implements CommandLineRunner {
             roleRepository.save(adminRole);
         }
 
-        // 创建测试用户 - 明文密码
+        // create test user
         if (!userRepository.existsByUsername("admin")) {
             Role adminRole = roleRepository.findByName("ADMIN").orElse(null);
 
             User admin = new User();
             admin.setUsername("admin");
-            admin.setPassword("password"); // ⚠️ 明文密码
+            admin.setPassword("password");
             admin.setEnabled(true);
             if (adminRole != null) {
                 admin.setRoles(Set.of(adminRole));
@@ -96,7 +96,7 @@ public class DataInitializer implements CommandLineRunner {
 
             User user = new User();
             user.setUsername("ash");
-            user.setPassword("pikachu"); // ⚠️ 明文密码
+            user.setPassword("pikachu");
             user.setEnabled(true);
             if (userRole != null) {
                 user.setRoles(Set.of(userRole));

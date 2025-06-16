@@ -2,7 +2,6 @@ package net.rachel.controller;
 
 import java.util.List;
 import net.rachel.dto.TrainerDto;
-import net.rachel.entity.Trainer;
 import net.rachel.service.TrainerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -29,6 +29,7 @@ public class TrainerController {
         this.trainerService = trainerService;
     }
 
+
     // Build Get Trainer REST API
     // http://localhost:8080/api/trainers/1
     @GetMapping("/{id}")
@@ -41,7 +42,7 @@ public class TrainerController {
     // http://localhost:8080/api/trainers
     @GetMapping
     public ResponseEntity<List<TrainerDto>> getAllTrainers() {
-        List<TrainerDto> trainers =  trainerService.getAllTrainers();
+        List<TrainerDto> trainers = trainerService.getAllTrainers();
         return ResponseEntity.ok(trainers);
     }
 
@@ -56,10 +57,12 @@ public class TrainerController {
     // Build Update Trainer REST API
     // http://localhost:8080/api/trainers/1
     @PutMapping("/{id}")
-    public ResponseEntity<TrainerDto> updateTrainerById(@PathVariable("id") Long trainerId,@RequestBody TrainerDto trainerDto) {
-        TrainerDto updatedTrainerDto = trainerService.updateTrainerById(trainerId,trainerDto);
+    public ResponseEntity<TrainerDto> updateTrainerById(@PathVariable("id") Long trainerId, @RequestBody TrainerDto trainerDto) {
+        TrainerDto updatedTrainerDto = trainerService.updateTrainerById(trainerId, trainerDto);
         return ResponseEntity.ok(updatedTrainerDto);
-    };
+    }
+
+    ;
 
     // Build Delete REST API
     // http://localhost:8080/api/trainers/1
@@ -67,6 +70,12 @@ public class TrainerController {
     public ResponseEntity<String> deleteTrainerById(@PathVariable("id") Long trainerId) {
         trainerService.deleteTrainerById(trainerId);
         return ResponseEntity.ok("Trainer deleted successfully!");
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<TrainerDto>> searchTrainers(@RequestParam String q) {
+        List<TrainerDto> results = trainerService.searchTrainers(q);
+        return ResponseEntity.ok(results);
     }
 
 }
