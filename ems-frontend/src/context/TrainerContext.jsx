@@ -22,33 +22,21 @@ export const TrainerProvider = ({ children }) => {
     }
 
     const addTrainer = async (trainer)=> {
-        try {
             const response = await createTrainer(trainer)
             await loadTrainers()
             return response.data
-        } catch (err) {
-            throw err
-        }
     }
 
     const editTrainer = async (trainerId,trainer) => {
-        try {
             const response = await updateTrainer(trainerId,trainer)
             loadTrainers()
             return response.data
-        } catch (err) {
-            throw err
-        }
     }
 
     const removeTrainer = async () => {
-        try {
             const response = await deleteTrainer()
             loadTrainers()
             return response.data
-        } catch (err) {
-            throw err
-        }
     }
 
     useEffect(() => {
@@ -60,7 +48,6 @@ export const TrainerProvider = ({ children }) => {
     }, [])
 
     const contextValue = {
-        // 原有的数据（向后兼容）
         trainers,
         setTrainers,
         error,

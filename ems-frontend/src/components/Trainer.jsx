@@ -18,7 +18,7 @@ const Trainer = () => {
     const [errors, setErrors] = useState({})
     const { id } = useParams()
     const navigator = useNavigate()
-    const { addTrainer, editTrainer, getExistingTrainerById } = useTrainers()
+    const { trainers, addTrainer, editTrainer, getExistingTrainerById } = useTrainers()
 
     const fields = [
         { name: 'firstName', label: 'First Name' },
@@ -40,8 +40,17 @@ const Trainer = () => {
 
         if (formData.email && formData.email.trim()) {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
             if (!emailRegex.test(formData.email)) {
                 newErrors.email = 'Invalid email format'
+                isValid = false
+            }
+
+            const existed = trainers.some(trainer=> trainer.email === formData.email);
+
+            // check if email unique when create
+            if (!id && existed) {
+                newErrors.email = "Email already existed."
                 isValid = false
             }
         }
@@ -50,22 +59,19 @@ const Trainer = () => {
         return isValid
     }
 
-    // 🔧 修复useEffect
     useEffect(() => {
         if (id) {
-            console.log('🔍 加载训练师数据 ID:', id)
-
-            // 先尝试从Context获取（性能优化）
+            console.log('🔍 Loading Trainer Data ID:', id)
+            // Try acquiring existing trainer from context first to improve performance
             const existingTrainer = getExistingTrainerById(id)
             if (existingTrainer) {
-                console.log('✅ 从Context获取训练师数据:', existingTrainer)
+                console.log('✅ Acquiring data from context:', existingTrainer)
                 setFormData(existingTrainer)
             } else {
-                // 从API获取
+                // Acquire through API
                 getTrainerById(id).then(response => {
                     setFormData(response.data)
                 })
-
             }
         }
     }, [id, getTrainerById])
@@ -76,18 +82,25 @@ const Trainer = () => {
 
     async function createOrUpdateTrainer (e) {
         e.preventDefault()
+        const isValid = validateForm()
 
-        if (validateForm()) {
+        if (isValid) {
             if (id) {
                 await editTrainer(id, formData)
-                alert('训练师更新成功！')
+                alert('Trainer Updated successfully！')
+                navigator('/trainers')
 
             } else {
+
                 await addTrainer(formData)
-                alert('训练师创建成功！')
+                alert('Trainer Created successfully！')
+                navigator('/trainers')
             }
         }
+    }
 
+    const handleCancel = (e) => {
+        e.preventDefault()
         navigator('/trainers')
     }
 
@@ -95,7 +108,6 @@ const Trainer = () => {
         return (
             <h2 className="text-center p-2">{ id ? 'Update Trainer' : 'Create Trainer' }</h2>
         )
-
     }
 
     return (
@@ -103,9 +115,7 @@ const Trainer = () => {
             <br/><br/>
             <div className="row">
                 <div className="card col-md-6 offset-md-3">
-                    {
-                        pageTitle()
-                    }
+                    { pageTitle() }
                     <div className="card-body">
                         <form>
                             { fields.map((field) => (
@@ -130,11 +140,8 @@ const Trainer = () => {
                                 </div>
                             )) }
 
-                            <button className="btn btn-success"
-                                // style={{backgroundColor: "#A0D8B3"}}
-                                    onClick={ createOrUpdateTrainer }>
-                                Submit
-                            </button>
+                            <button className="btn btn-success me-3" onClick={ createOrUpdateTrainer }>Submit</button>
+                            <button className="btn btn-primary" onClick={handleCancel}>Cancel</button>
                         </form>
                     </div>
 

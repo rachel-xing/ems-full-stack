@@ -1,13 +1,11 @@
 import { useTrainers } from '../context/TrainerContext.jsx'
-
-import {
-    deleteTrainer,
-} from '../services/TrainerService.js'
+import { searchTrainer } from '../services/TrainerService.js'
+import { deleteTrainer } from '../services/TrainerService.js'
 
 import { useNavigate } from 'react-router-dom'
-
-const TrainerList = () => {
-    const { trainers, setTrainers } = useTrainers()
+// eslint-disable-next-line react/prop-types
+const TrainerList = ({role}) => {
+    const { trainers, setTrainers, loadTrainers } = useTrainers()
     const navigator = useNavigate()
 
     function createNewTrainer () {
@@ -19,20 +17,38 @@ const TrainerList = () => {
     }
 
     function removeTrainer (id) {
-
         deleteTrainer(id).then(() => {
-            setTrainers()
+            loadTrainers()
         }).catch(error => {
             console.log(error)
         })
     }
 
+    const handleSearch = async(e) => {
+        e.preventDefault()
+        const query = e.target.search.value
+        console.log('Searching for:', query)
+        const res = await searchTrainer(query)
+        const searchedTrainer = res.data
+        setTrainers(searchedTrainer)
+    }
+
     return (
         <div className="contrainer m-3">
             <h2 className="text-center">List of Trainers</h2>
-            <button className="btn btn-success mb-2"
-                    onClick={ createNewTrainer }>Create Trainer
-            </button>
+            <div className="d-flex justify-content-between mb-3">
+                <button className="btn btn-success mb-2"
+                        onClick={ createNewTrainer }>Create Trainer
+                </button>
+                <form className="d-flex" role="search" onSubmit={ handleSearch }>
+                    <input className="form-control me-2" type="search" name="search"
+                           placeholder="Search" aria-label="Search"/>
+                    <button className="btn btn-outline-success"
+                            type="submit">Search
+                    </button>
+                </form>
+            </div>
+
             <table className="table table-striped table-bordered">
                 <thead>
                     <tr>
@@ -41,7 +57,10 @@ const TrainerList = () => {
                         <th>Trainer Last Name</th>
                         <th>Trainer Email</th>
                         <th>Trainer Region</th>
-                        <th>Actions</th>
+                        { role === "ADMIN" &&
+                            <th>Actions</th>
+                        }
+
                     </tr>
                 </thead>
                 <tbody>
@@ -53,17 +72,19 @@ const TrainerList = () => {
                                 <td>{ trainer.lastName }</td>
                                 <td>{ trainer.email }</td>
                                 <td>{ trainer.region }</td>
-                                <th>
-                                    <button className="btn btn-success ms-2 "
-                                            onClick={ () => updateTrainer(
-                                                trainer.id) }>Update
-                                    </button>
-                                    <button className="btn btn-danger ms-2"
-                                            onClick={ () => removeTrainer(
-                                                trainer.id) }
-                                    >Delete
-                                    </button>
-                                </th>
+                                { role === "ADMIN" &&
+                                    <th>
+                                        <button className="btn btn-success ms-2 "
+                                                onClick={ () => updateTrainer(
+                                                    trainer.id) }>Update
+                                        </button>
+                                        <button className="btn btn-danger ms-2"
+                                                onClick={ () => removeTrainer(
+                                                    trainer.id) }
+                                        >Delete
+                                        </button>
+                                    </th>
+                                }
 
 
                             </tr>)

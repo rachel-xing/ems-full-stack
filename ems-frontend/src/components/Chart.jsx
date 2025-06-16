@@ -36,7 +36,7 @@ const Chart = ({ trainers }) => {
     }
 
     return (
-        <div className="card p-4 shadow-sm">
+        <div className="card p-4 shadow-sm" style={{width: '50rem'}}>
             <h5 className="mb-3">Trainer Growth Over Time</h5>
             <Line data={ data } options={ options }/>
         </div>

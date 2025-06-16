@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { login } from '../services/authService.js'
 
 // eslint-disable-next-line react/prop-types
 const Login = ({ onLogin }) => {
@@ -12,17 +13,15 @@ const Login = ({ onLogin }) => {
     const [success, setSuccess] = useState('')
     const navigator = useNavigate()
 
-    // 处理输入变化
     const handleChange = (e) => {
         setFormData({
             ...formData,
             [ e.target.name ]: e.target.value,
         })
-        // 清除错误信息
+
         setError('')
     }
 
-    // 处理登录提交
     const handleSubmit = async() => {
         if (!formData.username || !formData.password) {
             setError('Please enter username and password')
@@ -34,33 +33,26 @@ const Login = ({ onLogin }) => {
         setSuccess('')
 
         try {
-            const response = await fetch('http://localhost:8080/api/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            })
+            const response = await login(formData)
+            console.log(response)
+            const data = response.data
+            setSuccess(`Log in Successfully! Welcome ${ data.username }`)
 
-            if (response.ok) {
-                const data = await response.json()
-                setSuccess(`Log in Successfully! Welcome ${ data.username }`)
+            // store token to localStorage
+            onLogin(data.token, data.username)
+            navigator('/')
 
-                // store token to localStorage
-                onLogin(data.token, data.username)
-                navigator('/')
-
-            } else {
-                const errorText = await response.text()
-                setError(errorText || 'Login failed. Please check username ans password.')
-            }
+            const errorText = await response.text()
+            setError(errorText || 'Login failed. Please check username ans password.')
         }
-        catch (err) {
+        catch
+            (err) {
             setError('Connect failed. Please check network.')
             console.error('Login error:', err)
         } finally {
             setIsLoading(false)
         }
+
     }
 
     const quickLogin = (username, password) => {
@@ -125,17 +117,15 @@ const Login = ({ onLogin }) => {
                             />
                         </div>
 
-                        {/* 错误信息 */ }
+                        {/* Error Info */ }
                         { error && (
-                            <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded">
-                                <div className="flex">
-                                    <span className="text-red-500 mr-2">⚠️</span>
-                                    <p className="text-red-700">{ error }</p>
-                                </div>
+                            <div
+                                className="d-flex align-items-center justify-content-center bg-danger-subtle rounded p-2 mt-3">
+                                <p className="text-danger m-0">{ error }</p>
                             </div>
                         ) }
 
-                        {/* 成功信息 */ }
+                        {/* Success */ }
                         { success && (
                             <div className="bg-green-50 border-l-4 border-green-400 p-4 rounded">
                                 <div className="flex">
