@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react'
 
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTrainers } from '../context/TrainerContext.jsx'
-import { getTrainerById } from '../services/TrainerService.js'
+import { getTrainerById } from '../services/trainerService.js'
+import Layout from './layout/Layout.jsx'
+import ContentHeader from './ContentHeader.jsx'
 
 const Trainer = () => {
 
@@ -46,11 +48,11 @@ const Trainer = () => {
                 isValid = false
             }
 
-            const existed = trainers.some(trainer=> trainer.email === formData.email);
+            const existed = trainers.some(trainer => trainer.email === formData.email)
 
             // check if email unique when create
             if (!id && existed) {
-                newErrors.email = "Email already existed."
+                newErrors.email = 'Email already existed.'
                 isValid = false
             }
         }
@@ -104,51 +106,48 @@ const Trainer = () => {
         navigator('/trainers')
     }
 
-    function pageTitle () {
-        return (
-            <h2 className="text-center p-2">{ id ? 'Update Trainer' : 'Create Trainer' }</h2>
-        )
+    const pageTitle = () => {
+        return id ? 'Update Trainer' : 'Create Trainer'
     }
 
     return (
-        <div className="container">
-            <br/><br/>
+        <Layout>
+            <ContentHeader title={ pageTitle() } path="/trainers"/>
             <div className="row">
-                <div className="card col-md-6 offset-md-3">
-                    { pageTitle() }
-                    <div className="card-body">
-                        <form>
-                            { fields.map((field) => (
-                                <div className="form-group mb-2"
-                                     key={ field.name }>
-                                    <label htmlFor={ field.name }
-                                           className="form-label">
-                                        { field.label }:
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name={ field.name }
-                                        placeholder={ `Enter Trainer ${ field.label }` }
-                                        className={ `form-control ${ errors[ field.name ] ? 'is-invalid' : '' }` }
-                                        value={ formData[ field.name ] }
-                                        onChange={ handleChange }
-                                    />
-                                    { errors[ field.name ] && (
-                                        <div
-                                            className="invalid-feedback">{ errors[ field.name ] }</div>
-                                    ) }
-                                </div>
-                            )) }
+                <form className='bg-white rounded-4 p-3 col-12 col-md-6'>
+                    { fields.map((field) => (
+                        <div className="form-group mb-2"
+                             key={ field.name }>
+                            <label htmlFor={ field.name }
+                                   className="form-label">
+                                { field.label }
+                            </label>
+                            <input
+                                type="text"
+                                name={ field.name }
+                                placeholder={ `Enter Trainer ${ field.label }` }
+                                className={ `form-control ${ errors[ field.name ] ? 'is-invalid' : '' }` }
+                                value={ formData[ field.name ] }
+                                onChange={ handleChange }
+                            />
+                            { errors[ field.name ] && (
+                                <div
+                                    className="invalid-feedback">{ errors[ field.name ] }</div>
+                            ) }
+                        </div>
+                    )) }
 
-                            <button className="btn btn-success me-3" onClick={ createOrUpdateTrainer }>Submit</button>
-                            <button className="btn btn-primary" onClick={handleCancel}>Cancel</button>
-                        </form>
-                    </div>
+                    <button className="btn btn-success me-3" onClick={ createOrUpdateTrainer }>Submit
+                    </button>
+                    <button className="btn btn-primary" onClick={ handleCancel }>Cancel</button>
+                </form>
 
-                </div>
+
             </div>
 
-        </div>
+
+        </Layout>
+
     )
 }
 
