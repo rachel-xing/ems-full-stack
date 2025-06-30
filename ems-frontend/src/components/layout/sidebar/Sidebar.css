@@ -1,0 +1,51 @@
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    transition: width 0.3s ease;
+    flex-shrink: 0
+}
+
+.sidebar.collapsed {
+    width: 80px;
+
+}
+
+.sidebar .appLogo {
+    color: dodgerblue;
+}
+.toggleContainer {
+    font-size: 1.25rem;
+}
+
+ul li {
+    list-style: none;
+    padding:8px;
+}
+
+ul li a {
+    text-decoration: none;
+    color:#888;
+}
+
+ul li:hover{
+    background: #D9EDFF;
+    border-radius: 8px;
+}
+
+ul li:hover a{
+    color: #184190;
+}
+
+.sidebar .active {
+    background: #D9EDFF;
+    border-radius: 8px;
+    color: #184190;
+}
+
+
+.sidebar .active a {
+    color: #184190;
+}
+
+
+
