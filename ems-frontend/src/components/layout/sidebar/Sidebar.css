@@ -2,17 +2,18 @@
     width: 250px;
     height: 100vh;
     transition: width 0.3s ease;
-    flex-shrink: 0
+    flex-shrink: 0;
+    box-shadow: 0 5px 5px grey;
 }
 
 .sidebar.collapsed {
     width: 80px;
-
 }
 
 .sidebar .appLogo {
     color: dodgerblue;
 }
+
 .toggleContainer {
     font-size: 1.25rem;
 }

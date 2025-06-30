@@ -3,8 +3,8 @@ import { searchTrainer } from '../services/trainerService.js'
 import { deleteTrainer } from '../services/trainerService.js'
 
 import { useNavigate } from 'react-router-dom'
-import Layout from './layout/Layout.jsx'
-import ContentHeader from './ContentHeader.jsx'
+import Layout from '../components/layout/Layout.jsx'
+import ContentHeader from '../components/ContentHeader.jsx'
 // eslint-disable-next-line react/prop-types
 const TrainerList = ({ role }) => {
     const { trainers, setTrainers, loadTrainers } = useTrainers()

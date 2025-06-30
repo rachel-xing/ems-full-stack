@@ -1,4 +1,4 @@
 import api from '../api/apiClient.jsx'
 
-export const login = (loginData) => api.post('auth/login', loginData)
+export const loginApi = (loginData) => api.post('auth/login', loginData)
 

@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTrainers } from '../context/TrainerContext.jsx'
 import { getTrainerById } from '../services/trainerService.js'
-import Layout from './layout/Layout.jsx'
-import ContentHeader from './ContentHeader.jsx'
+import Layout from '../components/layout/Layout.jsx'
+import ContentHeader from '../components/ContentHeader.jsx'
 
 const Trainer = () => {
 

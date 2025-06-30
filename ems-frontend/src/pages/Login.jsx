@@ -1,16 +1,14 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { login } from '../services/authService.js'
+import { useAuth } from '../context/AuthContext.jsx'
 
-// eslint-disable-next-line react/prop-types
-const Login = ({ onLogin }) => {
+const Login = () => {
     const [formData, setFormData] = useState({
         username: '',
         password: '',
     })
-    const [isLoading, setIsLoading] = useState(false)
-    const [error, setError] = useState('')
-    const [success, setSuccess] = useState('')
+
+    const {login,error,isLoading} = useAuth()
     const navigator = useNavigate()
 
     const handleChange = (e) => {
@@ -18,41 +16,12 @@ const Login = ({ onLogin }) => {
             ...formData,
             [ e.target.name ]: e.target.value,
         })
-
-        setError('')
     }
 
-    const handleSubmit = async() => {
-        if (!formData.username || !formData.password) {
-            setError('Please enter username and password')
-            return
-        }
-
-        setIsLoading(true)
-        setError('')
-        setSuccess('')
-
-        try {
-            const response = await login(formData)
-            console.log(response)
-            const data = response.data
-            setSuccess(`Log in Successfully! Welcome ${ data.username }`)
-
-            // store token to localStorage
-            onLogin(data.token, data.username)
-            navigator('/')
-
-            const errorText = await response.text()
-            setError(errorText || 'Login failed. Please check username ans password.')
-        }
-        catch
-            (err) {
-            setError('Connect failed. Please check network.')
-            console.error('Login error:', err)
-        } finally {
-            setIsLoading(false)
-        }
-
+    const handleSubmit = async (e)=> {
+        e.preventDefault()
+        await login(formData)
+        navigator("/")
     }
 
     const quickLogin = (username, password) => {
@@ -125,17 +94,6 @@ const Login = ({ onLogin }) => {
                             </div>
                         ) }
 
-                        {/* Success */ }
-                        { success && (
-                            <div className="bg-green-50 border-l-4 border-green-400 p-4 rounded">
-                                <div className="flex">
-                                    <span className="text-green-500 mr-2">✅</span>
-                                    <p className="text-green-700">{ success }</p>
-                                </div>
-                            </div>
-                        ) }
-
-                        {/* 登录按钮 */ }
                         <button
                             onClick={ handleSubmit }
                             disabled={ isLoading }

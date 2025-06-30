@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { createTrainer, deleteTrainer, getTrainerList, updateTrainer } from '../services/TrainerService'
+import { createTrainer, deleteTrainer, getTrainerList, updateTrainer } from '../services/trainerService.js'
 
 const TrainerContext = createContext()
 

@@ -1,42 +1,81 @@
-import { createContext, useCallback, useState } from 'react'
+import { createContext, useState, useContext, useEffect } from 'react'
+import { loginApi } from '../services/authService.js'
 
 const AuthContext = createContext()
-
-const STORAGE_KEYS = {
-    TOKEN: 'token',
-    USERNAME: 'username',
-    ROLE: 'role',
-}
-
+// eslint-disable-next-line react/prop-types
 export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false)
-    const [user, setUser] = useState(null)
     const [role, setRole] = useState('')
-    const [loading, setIsLoading] = useState()
+    const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
 
-    const login = useCallback(
-        async(credentials) => {
-            if (!credentials?.username || !credentials?.password) {
-                setError('Username and password are required')
-            }
+    useEffect(() => {
+        const token = localStorage.getItem('token')
+        if (token) {
+            setIsAuthenticated(true)
+        } else {
+            console.log('No stored token found')
+        }
+        setIsLoading(false)
+    }, [])
 
+    const login = async(credentials) => {
+        if (!credentials?.username || !credentials?.password) {
+            setError('Username and password are required')
+            return
+        }
+
+        try {
             setIsLoading(true)
+            const response = await loginApi(credentials)
+            const data = response.data
 
-            try {
-                const response = await login(credentials)
-                const data = response.data
-                localStorage.setItem(STORAGE_KEYS.TOKEN, data.token)
-                localStorage.setItem(STORAGE_KEYS.USERNAME, data.username)
-                setIsAuthenticated(true)
-
-
-            } catch {
-
+            if (!data.token) {
+                throw new Error('No authentication token received')
             }
 
-        },
-        [],
+            localStorage.setItem('token', data.token)
+            localStorage.setItem('username', data.username)
+            localStorage.setItem('role',role)
+
+            const userRole = data.roles?.[0]?.name || ''
+            setRole(userRole)
+            setIsAuthenticated(true)
+        }
+        catch (error) {
+            console.error('Error occurred', error)
+            setError(error.message)
+            throw error
+        } finally {
+            setIsLoading(false)
+        }
+
+    }
+
+    const logout = () => {
+        localStorage.removeItem('token')
+        localStorage.removeItem('username')
+        localStorage.removeItem('role')
+        setIsAuthenticated(false)
+        setRole('')
+        setError('')
+    }
+
+    const values = {
+        isAuthenticated,
+        isLoading,
+        role,
+        error,
+        login,
+        logout,
+    }
+
+    return (
+        <AuthContext.Provider value={ values }>
+            { children }
+        </AuthContext.Provider>
     )
 
 }
+
+export const useAuth = () => useContext(AuthContext)
