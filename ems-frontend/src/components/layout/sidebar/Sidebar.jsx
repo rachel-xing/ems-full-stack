@@ -7,6 +7,7 @@
     import { FcStatistics } from 'react-icons/fc'
     import { TbLayoutSidebarLeftCollapse } from 'react-icons/tb'
     import { TbLayoutSidebarRightCollapse } from "react-icons/tb";
+    import { useAuth } from '../../../context/AuthContext.jsx'
 
 
     const sidebarData = [
@@ -18,6 +19,7 @@
     function Sidebar () {
         const [isCollapsed, setIsCollapsed] = useState(false)
         const location = useLocation()
+        const {logout} = useAuth()
 
         const toggleSidebar = (e) => {
             e.preventDefault()
@@ -28,6 +30,8 @@
         const handleItemClick = (e) => {
             e.stopPropagation()
         }
+
+
 
         return (
             <nav className={ `d-flex flex-column justify-content-between sidebar p-3 ${ isCollapsed ? 'collapsed' : '' }` }>
@@ -58,7 +62,7 @@
                     </ul>
                 </div>
                 <ul className='p-0'>
-                    <li>
+                    <li onClick={logout}>
                         <Link to="/login" className='d-flex gap-2 align-items-center'>
                             <TbLogout2/>
                             {!isCollapsed && <div>Log out</div>}

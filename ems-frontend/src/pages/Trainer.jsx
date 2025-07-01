@@ -112,7 +112,7 @@ const Trainer = () => {
 
     return (
         <Layout>
-            <ContentHeader title={ pageTitle() } path="/trainers"/>
+            <ContentHeader title={ pageTitle() } path="/"/>
             <div className="row">
                 <form className='bg-white rounded-4 p-3 col-12 col-md-6'>
                     { fields.map((field) => (

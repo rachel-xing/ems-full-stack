@@ -11,21 +11,35 @@ import ProtectedRoute from './ProtectedRoute.jsx'
 import AuthRoute from './AuthRoute.jsx'
 
 const AppContent = () => {
-    const { role } = useAuth()
-
     return (
         <TrainerProvider>
             <Router>
                 <Routes>
-                    <Route path="/login" element={ <Login/> }/>
-                    <Route path="/" element={ <Home/> }/>
+                    <Route path="/login" element={
+                        <AuthRoute><Login/> </AuthRoute>
+                    }/>
+                    <Route path="/" element={
+                        <ProtectedRoute requiredRoles={ ['ADMIN', 'USER'] }><Home/> </ProtectedRoute>
 
-                    <Route path="/trainers" element={ <TrainerList role={ role }/> }/>
-                    <Route path="/create-trainer" element={ <Trainer/> }/>
+                    }/>
 
-                    <Route path="/update-trainer/:id" element={ <Trainer/> }/>
+                    <Route path="/trainers" element={
+                        <ProtectedRoute requiredRoles={ ['ADMIN', 'USER'] }><TrainerList/>
+                        </ProtectedRoute>
+                    }
+                    />
 
-                    <Route path="/statistics" element={ <Statistics/> }/>
+                    <Route path="/create-trainer" element={
+                        <ProtectedRoute requiredRoles={ ['ADMIN'] }><Trainer/> </ProtectedRoute>
+                    }/>
+
+                    <Route path="/update-trainer/:id" element={
+                        <ProtectedRoute requiredRoles={ ['ADMIN'] }><Trainer/> </ProtectedRoute>
+                    }/>
+
+                    <Route path="/statistics" element={
+                        <ProtectedRoute requiredRoles={ ['ADMIN'] }><Statistics/> </ProtectedRoute>
+                    }/>
 
                     <Route path="*" element={ <Navigate to="/" replace/> }/>
                 </Routes>

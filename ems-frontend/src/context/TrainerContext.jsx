@@ -22,25 +22,36 @@ export const TrainerProvider = ({ children }) => {
     }
 
     const addTrainer = async (trainer)=> {
+        try {
             const response = await createTrainer(trainer)
             await loadTrainers()
             return response.data
+        } catch (err) {
+            setError(err.message)
+        }
     }
 
     const editTrainer = async (trainerId,trainer) => {
-            const response = await updateTrainer(trainerId,trainer)
-            loadTrainers()
+        try {
+            const response = await updateTrainer(trainerId, trainer)
+            await loadTrainers()
             return response.data
+        } catch(err) {
+            setError(err.message)
+        }
     }
 
-    const removeTrainer = async () => {
-            const response = await deleteTrainer()
-            loadTrainers()
+    const removeTrainer = async (trainerId) => {
+        try {
+            const response = await deleteTrainer(trainerId)
+            await loadTrainers()
             return response.data
+        } catch (err) {
+            setError(err.message)
+        }
     }
 
     useEffect(() => {
-        // 只有在有token的情况下才加载数据
         const token = localStorage.getItem('token')
         if (token) {
             loadTrainers()
@@ -56,7 +67,6 @@ export const TrainerProvider = ({ children }) => {
         editTrainer,
         removeTrainer,
         getExistingTrainerById,
-
     }
 
     return (

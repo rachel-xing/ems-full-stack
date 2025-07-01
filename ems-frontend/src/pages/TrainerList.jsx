@@ -6,9 +6,10 @@ import { useNavigate } from 'react-router-dom'
 import Layout from '../components/layout/Layout.jsx'
 import ContentHeader from '../components/ContentHeader.jsx'
 // eslint-disable-next-line react/prop-types
-const TrainerList = ({ role }) => {
+const TrainerList = () => {
     const { trainers, setTrainers, loadTrainers } = useTrainers()
     const navigator = useNavigate()
+    const role = localStorage.getItem('role')
 
     function createNewTrainer () {
         navigator('/create-trainer')
@@ -37,13 +38,16 @@ const TrainerList = ({ role }) => {
 
     return (
         <Layout>
-            <ContentHeader title='Trainer List' path='/trainers'/>
+            <ContentHeader title="Trainer List" path="/"/>
             <div className="contrainer bg-white rounded-4 p-5">
 
                 <div className="d-flex justify-content-between mb-3">
-                    <button className="btn btn-success mb-2"
-                            onClick={ createNewTrainer }>Create Trainer
-                    </button>
+
+                    { role && role === 'ADMIN' &&
+                        <button className="btn btn-success mb-2"
+                                onClick={ createNewTrainer }>Create Trainer
+                        </button>
+                    }
                     <form className="d-flex" role="search" onSubmit={ handleSearch }>
                         <input className="form-control me-2" type="search" name="search"
                                placeholder="Search" aria-label="Search"/>

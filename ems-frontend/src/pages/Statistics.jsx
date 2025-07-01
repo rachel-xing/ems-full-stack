@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import Chart from '../components/Chart.jsx'
 import { useTrainers } from '../context/TrainerContext.jsx'
 import Layout from '../components/layout/Layout.jsx'
+import ContentHeader from '../components/ContentHeader.jsx'
 
 const Statistics = () => {
     const { loadTrainers, trainers } = useTrainers()
@@ -33,6 +34,7 @@ const Statistics = () => {
     return (
         <Layout>
 
+            <ContentHeader title="Statistics" path='/'/>
             <button className="btn btn-outline-primary mb-3 me-3">
                 Total Trainers : { trainers.length }
             </button>
